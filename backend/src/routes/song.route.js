@@ -1,6 +1,6 @@
 const express = require("express");
 const identifierUser = require('../middlewares/auth.middleware')
-const {uploadSong} = require('../controllers/song.controller')
+const {uploadSong , getAllSong} = require('../controllers/song.controller')
 const upload = require('../middlewares/multer.middleware')
 
 
@@ -22,6 +22,16 @@ const songRouter = express.Router();
 songRouter.post("/", identifierUser , upload.single("songFile") , uploadSong )
 
 
+
+
+
+/**
+ * @method      GET
+ * @route        /api/songs
+ * @description     user can get all the songs playlinst according to the mood
+ * 
+ */
+songRouter.get("/", identifierUser , getAllSong )
 
 
 

@@ -66,6 +66,31 @@ async function uploadSong(req,res){
 
 
 
+/**get all the song */
+
+async function  getAllSong(req,res){
+ try {
+
+  const {mood} = req.query
+  const songs = await songModel.find({mood})
+  res.status(200).json({
+  success:true,
+  message:"playlist fetch sucessfully",
+  songs
+
+  })
+  
+ } catch (error) {
+return res.status(500).json({
+  success:false,
+ message:`${error.message}`,
+ error:{
+  code:"INTERNAL SERVER ERROR",
+  details:null
+ }
+})
+ }
+}
 
 
 
@@ -75,4 +100,7 @@ async function uploadSong(req,res){
 
 
 
-module.exports = {uploadSong}
+
+
+
+module.exports = {uploadSong , getAllSong}
