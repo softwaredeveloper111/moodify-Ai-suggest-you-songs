@@ -14,7 +14,7 @@ async function uploadSong(req,res){
 
     const tags = NodeID3.read(songFileBuffer);
 
-    console.log(tags)
+
     
 
   const  [songFile,PosterFile] =   await Promise.all([
