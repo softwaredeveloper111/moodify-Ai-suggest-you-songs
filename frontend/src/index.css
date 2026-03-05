@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+/* Apply fonts to actual elements */
+body {
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+.registerCard {
+  background-color: rgba(255, 255, 255, 0.123);
+  backdrop-filter: blur(3px);
+}
+
+button:active {
+  scale: 0.78;
+}
+
+button {
+  transition: scale .5s linear;
+}

@@ -84,6 +84,7 @@ async function loginController(req,res){
   try {
 
     const {identifier,password} = req.body;
+
     const isUserRegistered = await userModel.findOne({
       $or:[
         {email:identifier},
@@ -120,7 +121,8 @@ async function loginController(req,res){
         }
       })
     }
-
+   
+    
 
     const token = jwt.sign({id:isUserRegistered.id,username:isUserRegistered.username} , process.env.JWT_SECRET_KEY)
    
