@@ -1,5 +1,6 @@
 import { Routes,Route } from "react-router-dom";
 import ProtectedRoute from "./features/auth/components/ProtectedRoute";
+import Home from "./features/Home/pages/Home";
 
 
 import React from 'react'
@@ -11,7 +12,7 @@ const AppRouter = () => {
      <Routes>
       <Route path="/register" element={<Register/>}/>
       <Route path="/login" element={<Login/>}/>
-      <Route path="/" element={ <ProtectedRoute><h1>Home</h1></ProtectedRoute> }/>
+      <Route path="/" element={ <ProtectedRoute><Home/></ProtectedRoute> }/>
      </Routes>
   )
 }
