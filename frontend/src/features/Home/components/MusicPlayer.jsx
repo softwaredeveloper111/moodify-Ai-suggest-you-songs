@@ -128,21 +128,49 @@ const colors = moodColors[song.mood] || moodColors.nutural;
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
         .mp * { box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        .mp-glass { width:100%;height:100%;background:rgba(5,5,18,0.32);backdrop-filter:blur(3px);border-radius:16px;display:flex;align-items:stretch;padding:18px 22px;gap:18px; }
-        .mp-cover { width:210px;flex-shrink:0;border-radius:12px;overflow:hidden;position:relative;box-shadow:0 8px 28px rgba(0,0,0,0.45); }
+
+        /* ── Glass container: row on desktop, column on mobile ── */
+        .mp-glass {
+          width: 100%; height: 100%;
+          background: rgba(5,5,18,0.32);
+          backdrop-filter: blur(3px);
+          border-radius: 16px;
+          display: flex;
+          flex-direction: row;
+          align-items: stretch;
+          padding: clamp(12px, 3vw, 18px) clamp(14px, 3.5vw, 22px);
+          gap: clamp(12px, 3vw, 18px);
+        }
+
+        /* ── Cover: fixed width on desktop, full-width square on mobile ── */
+        .mp-cover {
+          width: clamp(100px, 28%, 210px);
+          flex-shrink: 0;
+          border-radius: 12px;
+          overflow: hidden;
+          position: relative;
+          box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+          /* keep it square */
+          aspect-ratio: 1 / 1;
+          align-self: center;
+        }
         .mp-cover img { width:100%;height:100%;object-fit:cover;display:block;transition:transform 7s ease; }
         .mp-cover img.spin { transform:scale(1.07); }
-        .mp-cover-fb { width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:52px; }
+        .mp-cover-fb { width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:clamp(32px,8vw,52px); }
         .mp-load-ov { position:absolute;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center; }
         .mp-spin { width:26px;height:26px;border:3px solid rgba(255,255,255,0.15);border-top-color:white;border-radius:50%;animation:mps 0.7s linear infinite; }
         @keyframes mps { to { transform:rotate(360deg); } }
-        .mp-right { flex:1;display:flex;flex-direction:column;justify-content:space-between;min-width:0;padding:2px 0; }
+
+        /* ── Right panel ── */
+        .mp-right { flex:1;display:flex;flex-direction:column;justify-content:space-between;min-width:0;padding:2px 0;gap: clamp(6px, 1.5vw, 0px); }
         .mp-toprow { display:flex;align-items:center;justify-content:space-between;gap:8px; }
         .mp-badge { font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.25); }
         .mp-like { background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.55);padding:3px;display:flex;align-items:center;transition:transform .2s,color .2s; }
         .mp-like:hover { transform:scale(1.25);color:#ef4444; }
-        .mp-title { font-size:15px;font-weight:600;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 8px rgba(0,0,0,0.4); }
-        .mp-artist { font-size:12px;color:rgba(255,255,255,0.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px; }
+        .mp-title { font-size:clamp(13px, 3.5vw, 15px);font-weight:600;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 8px rgba(0,0,0,0.4); }
+        .mp-artist { font-size:clamp(11px, 2.8vw, 12px);color:rgba(255,255,255,0.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px; }
+
+        /* ── Seek bar ── */
         .mp-seek { cursor:pointer; }
         .mp-seektrack { height:4px;background:rgba(255,255,255,0.18);border-radius:100px;position:relative;transition:height .15s; }
         .mp-seek:hover .mp-seektrack { height:6px; }
@@ -151,6 +179,8 @@ const colors = moodColors[song.mood] || moodColors.nutural;
         .mp-seek:hover .mp-seekthumb { opacity:1; }
         .mp-seektip { position:absolute;bottom:9px;transform:translateX(-50%);background:rgba(0,0,0,0.72);color:white;font-size:10px;padding:2px 6px;border-radius:5px;pointer-events:none;white-space:nowrap; }
         .mp-seektimes { display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.45);margin-top:4px;font-variant-numeric:tabular-nums; }
+
+        /* ── Controls ── */
         .mp-controls { display:flex;align-items:center;justify-content:space-between; }
         .mp-ic { background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;padding:5px;border-radius:50%;transition:color .15s,transform .15s;position:relative; }
         .mp-ic:hover { color:white;transform:scale(1.1); }
@@ -159,9 +189,11 @@ const colors = moodColors[song.mood] || moodColors.nutural;
         .mp-nav { background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;padding:7px;border-radius:50%;transition:color .15s,transform .15s; }
         .mp-nav:hover { color:white;transform:scale(1.1); }
         .mp-nav:active { transform:scale(0.93); }
-        .mp-playbtn { width:48px;height:48px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;background:white;color:#111827;box-shadow:0 4px 18px rgba(0,0,0,0.35);transition:transform .15s,box-shadow .15s; }
+        .mp-playbtn { width:clamp(40px,10vw,48px);height:clamp(40px,10vw,48px);border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;background:white;color:#111827;box-shadow:0 4px 18px rgba(0,0,0,0.35);transition:transform .15s,box-shadow .15s; }
         .mp-playbtn:hover { transform:scale(1.07);box-shadow:0 6px 26px rgba(0,0,0,0.45); }
         .mp-playbtn:active { transform:scale(0.95); }
+
+        /* ── Volume ── */
         .mp-vol { display:flex;align-items:center;gap:8px; }
         .mp-volic { background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.5);display:flex;align-items:center;transition:color .15s;flex-shrink:0; }
         .mp-volic:hover { color:white; }
@@ -169,13 +201,42 @@ const colors = moodColors[song.mood] || moodColors.nutural;
         .mp-voltrack:hover { height:5px; }
         .mp-volfill { height:100%;border-radius:100px;background:rgba(255,255,255,0.65); }
         .mp-volnum { font-size:11px;color:rgba(255,255,255,0.4);min-width:26px;text-align:right; }
+
+        /* ── Mobile: stack vertically ── */
+        @media (max-width: 480px) {
+          .mp-glass {
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            gap: 14px;
+          }
+          .mp-cover {
+            width: 56%;
+            max-width: 180px;
+            align-self: center;
+          }
+          .mp-right {
+            width: 100%;
+            gap: 10px;
+          }
+          .mp-vol {
+            /* hide vol number on very small screens to save space */
+          }
+        }
+
+        /* ── Narrow but not tiny (481–600px) ── */
+        @media (min-width: 481px) and (max-width: 600px) {
+          .mp-cover {
+            width: clamp(90px, 22%, 130px);
+          }
+        }
       `}</style>
 
       <audio ref={audioRef} />
 
       <div
-        className="upper music-player current-mood mp"
-        style={{ width:"640px", height:"250px", background:"linear-gradient(to right, #c4b5fd, #67e8f9)", opacity:0.9, borderRadius:"16px", position:"relative", overflow:"hidden", flexShrink:0 }}
+        className="upper music-player current-mood mp w-full "
+        style={{ background:"linear-gradient(to right, #c4b5fd, #67e8f9)", opacity:0.9, borderRadius:"16px", position:"relative", overflow:"hidden", flexShrink:0 }}
       >
         <div className="mp-glass">
           <div className="mp-cover">

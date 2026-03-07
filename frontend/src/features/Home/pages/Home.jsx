@@ -42,23 +42,22 @@ const Home = () => {
   return (
    
     <div className='home min-h-screen w-screen  bg-[#110C1D]'>
-      <Navbar user={user}/>
-      <div className='px-10 flex gap-2 justify-between'>
+     <Navbar user={user}/>
+     <div className='px-10 flex flex-col sm:flex-row gap-2 sm:gap-10 justify-between'>
 
-        {/* ✅ ExpressionCapture NEVER unmounts — always stays in DOM */}
+       
         <ExpressionCapture onMoodDetected={(detectedMood) => setMood(detectedMood)} />
 
-        <div className='flex flex-col gap-4 justify-between'>
+        <div className='flex flex-col gap-2  justify-between'>
           <CurrentMood mood={mood} />
-            <MoodGraph mood={mood} />
-          {/* ✅ loading shown only here — not full page return */}
+          <MoodGraph mood={mood} />
           {loading ? <Loading /> : songs && <MusicPlayer {...sharedProps} />}
         </div>
 
         {!loading && songs && <PlayListItem {...sharedProps} />}
        
 
-      </div>
+      </div> 
     </div>
   );
 };

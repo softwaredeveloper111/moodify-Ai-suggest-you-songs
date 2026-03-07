@@ -33,48 +33,60 @@ const injectKeyframes = () => {
       from { opacity: 0; transform: scale(0.85); }
       to   { opacity: 1; transform: scale(1); }
     }
+
+    /* ── Default min-height ── */
+    #ec-root-wrapper { min-height: 60vh; }
+
+    /* ── Responsive overrides ── */
+    @media (max-width: 480px) {
+      #ec-root-wrapper  { padding: 12px !important; min-height: 45vh !important; }
+      #ec-card          { padding: 24px 16px 20px !important; border-radius: 18px !important; }
+      #ec-title         { font-size: 19px !important; }
+    }
   `;
   document.head.appendChild(style);
 };
 
 const S = {
   wrapper: {
-    minHeight: "60vh",
-    width: "500px",
+    width: "100%",
+    maxWidth: 500,
     background: "linear-gradient(135deg, #080d1a 0%, #0f1629 50%, #0a1020 100%)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     fontFamily: "'Segoe UI', system-ui, sans-serif",
-    padding: 16,
+    padding: "clamp(10px, 3vw, 16px)",
     borderRadius: "12px",
+    boxSizing: "border-box",
   },
   card: {
     width: "100%",
     maxWidth: 420,
     background: "linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))",
     border: "1px solid rgba(255,255,255,0.07)",
-    borderRadius: 24,
-    padding: "36px 28px 28px",
+    borderRadius: "clamp(16px, 4vw, 24px)",
+    padding: "clamp(24px, 5vw, 36px) clamp(16px, 4vw, 28px) clamp(20px, 4vw, 28px)",
     backdropFilter: "blur(20px)",
     boxShadow: "0 24px 64px rgba(0,0,0,0.5)",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: 20,
+    gap: "clamp(14px, 3vw, 20px)",
+    boxSizing: "border-box",
   },
   topLabel: {
     fontSize: 10, fontWeight: 700, letterSpacing: "0.2em",
     color: "#22d3ee", textTransform: "uppercase", margin: 0,
   },
   title: {
-    fontSize: 24, fontWeight: 800, color: "#f1f5f9",
+    fontSize: "clamp(18px, 5vw, 24px)", fontWeight: 800, color: "#f1f5f9",
     margin: "6px 0 0", textAlign: "center",
   },
   camBox: (moodKey) => {
     const meta = MOOD_META[moodKey];
     return {
-      width: "100%", aspectRatio: "4/3", borderRadius: 16,
+      width: "100%", aspectRatio: "4/3", borderRadius: "clamp(10px, 3vw, 16px)",
       background: "#050a14",
       border: `1px solid ${meta ? meta.color + "55" : "rgba(34,211,238,0.15)"}`,
       boxShadow: meta ? `0 0 40px ${meta.glow}` : "none",
@@ -109,7 +121,7 @@ const S = {
     };
   },
   idleText: (visible) => ({
-    color: "rgba(34,211,238,0.25)", fontSize: 13, fontWeight: 600,
+    color: "rgba(34,211,238,0.25)", fontSize: "clamp(11px, 2.5vw, 13px)", fontWeight: 600,
     letterSpacing: "0.14em", textTransform: "uppercase",
     animation: "ecPulse 2s ease-in-out infinite", textAlign: "center",
     userSelect: "none", zIndex: 1, position: "absolute",
@@ -117,7 +129,7 @@ const S = {
   }),
   countdownBadge: {
     position: "absolute", bottom: 10, left: "50%", transform: "translateX(-50%)",
-    color: "#22d3ee", fontSize: 12, fontWeight: 600, letterSpacing: "0.06em",
+    color: "#22d3ee", fontSize: "clamp(10px, 2.5vw, 12px)", fontWeight: 600, letterSpacing: "0.06em",
     background: "rgba(8,13,26,0.75)", padding: "4px 14px", borderRadius: 20,
     whiteSpace: "nowrap", animation: "ecPulse 1s ease-in-out infinite", zIndex: 5,
   },
@@ -128,7 +140,7 @@ const S = {
     background: "linear-gradient(135deg, rgba(8,13,26,0.92), rgba(15,22,41,0.88))",
   },
   resultEmoji: {
-    fontSize: 72, lineHeight: 1,
+    fontSize: "clamp(48px, 13vw, 72px)", lineHeight: 1,
     filter: "drop-shadow(0 0 16px rgba(255,255,255,0.2))",
   },
   resultSmallLabel: {
@@ -136,18 +148,18 @@ const S = {
     color: "#475569", textTransform: "uppercase", margin: 0, textAlign: "center",
   },
   resultMoodName: (moodKey) => ({
-    fontSize: 34, fontWeight: 800,
+    fontSize: "clamp(22px, 7vw, 34px)", fontWeight: 800,
     color: MOOD_META[moodKey]?.color ?? "#f1f5f9",
     margin: 0, textAlign: "center", textTransform: "capitalize",
   }),
   btn: (disabled) => ({
-    width: "100%", padding: "13px 0",
+    width: "100%", padding: "clamp(11px, 2.5vw, 13px) 0",
     background: disabled
       ? "rgba(255,255,255,0.04)"
       : "linear-gradient(90deg, #0ea5e9 0%, #22d3ee 100%)",
     border: "none", borderRadius: 12,
     color: disabled ? "#334155" : "#080d1a",
-    fontSize: 14, fontWeight: 700, letterSpacing: "0.07em",
+    fontSize: "clamp(13px, 3vw, 14px)", fontWeight: 700, letterSpacing: "0.07em",
     cursor: disabled ? "not-allowed" : "pointer",
     transition: "opacity 0.2s, box-shadow 0.2s",
     boxShadow: disabled ? "none" : "0 4px 20px rgba(34,211,238,0.3)",
@@ -217,12 +229,12 @@ export default function ExpressionCapture({ onMoodDetected }) {
                  :               "Detect My Mood";
 
   return (
-    <div style={S.wrapper}>
-      <div style={S.card}>
+    <div style={S.wrapper} id="ec-root-wrapper">
+      <div style={S.card} id="ec-card">
 
         <div style={{ textAlign: "center" }}>
           <p style={S.topLabel}>Moodify</p>
-          <h1 style={S.title}>Expression Capture</h1>
+          <h1 style={S.title} id="ec-title">Expression Capture</h1>
         </div>
 
         <div style={S.camBox(isResult ? mood : null)}>

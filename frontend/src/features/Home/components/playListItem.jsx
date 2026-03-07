@@ -39,7 +39,7 @@ const PlayListItem = ({ songs, moodColors, idx, setIdx, playing, setPlaying, img
 
       <div
         className="playlist pl"
-        style={{ width:"490px", height:"88vh", background:"#e4e4e7", borderRadius:"10px", padding:"16px 28px", overflowY:"auto", scrollbarWidth:"thin" }}
+        style={{ maxWidth:"490px",width:"100%" ,height:"86vh", background:"#e4e4e7", borderRadius:"10px", padding:"16px 28px", overflowY:"auto", scrollbarWidth:"thin" }}
       >
         <div className="pl-header">
           <span className="pl-spark">✦</span>
