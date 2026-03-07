@@ -48,7 +48,7 @@ const Home = () => {
        
         <ExpressionCapture onMoodDetected={(detectedMood) => setMood(detectedMood)} />
 
-        <div className='flex flex-col gap-2  justify-between'>
+        <div className='flex flex-col gap-2  justify-between min-w-0 overflow-hidden'>
           <CurrentMood mood={mood} />
           <MoodGraph mood={mood} />
           {loading ? <Loading /> : songs && <MusicPlayer {...sharedProps} />}

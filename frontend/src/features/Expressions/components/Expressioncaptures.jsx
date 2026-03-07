@@ -59,6 +59,7 @@ const S = {
     padding: "clamp(10px, 3vw, 16px)",
     borderRadius: "12px",
     boxSizing: "border-box",
+    
   },
   card: {
     width: "100%",
