@@ -89,10 +89,7 @@ const useAuth = () => {
   }
  }
 
- useEffect(()=>{
-  handlerGetMe()
- },[])
-
+ 
 
   return (
      { handlerLogin, handlerRegister ,handlerGetMe,handlerLogout,loading,user  }

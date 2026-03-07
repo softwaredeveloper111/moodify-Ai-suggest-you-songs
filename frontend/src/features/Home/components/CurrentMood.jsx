@@ -20,7 +20,7 @@ const CurrentMood = ({ mood = "nutural" }) => {
   const moodData = MOOD_META.find(item => item.label === mood) ?? MOOD_META[3];
 
   return (
-    <div className='upper current-mood w-160 h-68 bg-linear-to-r from-[#171718] to-[#0f2744] rounded-xl py-10 px-20 flex justify-between'>
+    <div className='upper current-mood w-160 h-55 bg-linear-to-r from-[#171718] to-[#0f2744] rounded-xl py-10 px-20 flex justify-between'>
       <div>
         <h4 className='text-sm text-[#126682] font-bold'>CURRENT MOOD ANALYSIS</h4>
         <h1 className='mt-2 text-[3rem] text-white'>{moodData.label}</h1>

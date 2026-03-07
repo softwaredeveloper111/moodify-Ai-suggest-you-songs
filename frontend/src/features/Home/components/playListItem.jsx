@@ -1,19 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Props (from Home):
-//   songs, moodColors        — data
-//   idx, setIdx              — which song is active
-//   playing, setPlaying      — play/pause state
-//   imgErr, setImgErr        — broken image tracking
-// ─────────────────────────────────────────────────────────────────────────────
 const PlayListItem = ({ songs, moodColors, idx, setIdx, playing, setPlaying, imgErr, setImgErr }) => {
+
+  const [query, setQuery] = useState("");
+
+  const filtered = query.trim() === ""
+    ? songs
+    : songs.filter((s) =>
+        s.title.toLowerCase().includes(query.toLowerCase()) ||
+        s.artist.toLowerCase().includes(query.toLowerCase())
+      );
+
   return (
     <>
       <style>{`
         .pl * { box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         .pl-header { font-size:14px;font-weight:600;color:#111827;margin-bottom:10px;display:flex;align-items:center;gap:6px; }
         .pl-spark { color:#0794AD;font-size:18px; }
+        .pl-search { width:100%;padding:7px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.12);background:#f4f4f5;font-size:12px;color:#111;outline:none;margin-bottom:10px; }
+        .pl-search::placeholder { color:#aaa; }
+        .pl-empty { text-align:center;font-size:12px;color:#aaa;padding:20px 0; }
         .pl-item { display:flex;align-items:center;gap:10px;padding:5px 6px;border-radius:8px;cursor:pointer;transition:background .15s; }
         .pl-item:hover { background:rgba(0,0,0,0.07); }
         .pl-item.act { background:rgba(7,148,173,0.12); }
@@ -33,18 +39,30 @@ const PlayListItem = ({ songs, moodColors, idx, setIdx, playing, setPlaying, img
 
       <div
         className="playlist pl"
-        style={{ width:"490px", height:"80vh", background:"#e4e4e7", borderRadius:"10px", padding:"16px 28px", overflowY:"auto", scrollbarWidth:"thin" }}
+        style={{ width:"490px", height:"88vh", background:"#e4e4e7", borderRadius:"10px", padding:"16px 28px", overflowY:"auto", scrollbarWidth:"thin" }}
       >
         <div className="pl-header">
           <span className="pl-spark">✦</span>
           AI Recommended Playlist for you
         </div>
 
-        {songs.map((s, i) => (
+        <input
+          className="pl-search"
+          type="text"
+          placeholder="Search songs or artists…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+
+        {filtered.length === 0 && (
+          <div className="pl-empty">No songs found for "{query}"</div>
+        )}
+
+        {filtered.map((s, i) => (
           <div
             key={s._id}
-            className={`pl-item${i === idx ? " act" : ""}`}
-            onClick={() => { setIdx(i); setPlaying(true); }}
+            className={`pl-item${songs.indexOf(s) === idx ? " act" : ""}`}
+            onClick={() => { setIdx(songs.indexOf(s)); setPlaying(true); }}
           >
             <span className="pl-num">{i + 1}</span>
 
@@ -69,8 +87,7 @@ const PlayListItem = ({ songs, moodColors, idx, setIdx, playing, setPlaying, img
               <div className="pl-artist">{s.artist.split(",")[0]}</div>
             </div>
 
-            {/* Animated bars only when this song is active AND playing */}
-            {i === idx && playing && (
+            {songs.indexOf(s) === idx && playing && (
               <div className="pl-bars">
                 <div className="pl-bar" />
                 <div className="pl-bar" />

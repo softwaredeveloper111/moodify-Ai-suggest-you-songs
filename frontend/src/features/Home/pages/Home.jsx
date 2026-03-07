@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import ExpressionCapture from '../../Expressions/components/Expressioncaptures'
+import MoodGraph from "../components/MoodGraph";
 import useSong from "../hooks/useSong";
 import Loading from "../../shared/Loading";
 import MusicPlayer from "../components/MusicPlayer";
 import PlayListItem from "../components/playListItem";
 import CurrentMood from '../components/CurrentMood';
+import useAuth from "../../auth/hooks/useAuth";
 
 
 const Home = () => {
+  const {handlerGetMe,user} = useAuth();
   const { loading, songs, HandlerGetSong } = useSong();
   const [mood, setMood]     = useState("nutural");
   const [idx, setIdx]       = useState(0);
@@ -23,7 +26,11 @@ const Home = () => {
   };
 
   useEffect(() => {
-    setIdx(0);        // ✅ reset idx on every mood change — prevents songs[idx] undefined crash
+  handlerGetMe();
+}, []);
+
+  useEffect(() => {
+    setIdx(0);            // ✅ reset idx on every mood change — prevents songs[idx] undefined crash
     setPlaying(false);
     HandlerGetSong(mood).catch(console.error);
   }, [mood]);
@@ -33,8 +40,9 @@ const Home = () => {
   console.log(mood)
 
   return (
-    <div className='home min-h-screen w-screen bg-[#110C1D]'>
-      <Navbar />
+   
+    <div className='home min-h-screen w-screen  bg-[#110C1D]'>
+      <Navbar user={user}/>
       <div className='px-10 flex gap-2 justify-between'>
 
         {/* ✅ ExpressionCapture NEVER unmounts — always stays in DOM */}
@@ -42,11 +50,13 @@ const Home = () => {
 
         <div className='flex flex-col gap-4 justify-between'>
           <CurrentMood mood={mood} />
+            <MoodGraph mood={mood} />
           {/* ✅ loading shown only here — not full page return */}
           {loading ? <Loading /> : songs && <MusicPlayer {...sharedProps} />}
         </div>
 
         {!loading && songs && <PlayListItem {...sharedProps} />}
+       
 
       </div>
     </div>

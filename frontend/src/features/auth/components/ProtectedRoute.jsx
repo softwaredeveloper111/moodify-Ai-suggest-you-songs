@@ -1,20 +1,14 @@
 import React from 'react'
-import useAuth from "../hooks/useAuth";
-import Loading from "../../shared/Loading";
 import { Navigate } from "react-router-dom";
 
 
 const ProtectedRoute = ({children}) => {
  
+  const token = document.cookie.includes("JWT_TOKEN");
 
-  const {loading,user}  = useAuth();
 
-  if(loading){
-    return <Loading/>
-  }
-
-  if(!user){
-    return <Navigate to="/login"/>
+  if(!token){
+    return <Navigate to="/login" replace/>
   }
 
   return children

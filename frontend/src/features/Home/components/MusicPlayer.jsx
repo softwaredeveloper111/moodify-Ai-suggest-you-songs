@@ -175,7 +175,7 @@ const colors = moodColors[song.mood] || moodColors.nutural;
 
       <div
         className="upper music-player current-mood mp"
-        style={{ width:"640px", height:"272px", background:"linear-gradient(to right, #c4b5fd, #67e8f9)", opacity:0.9, borderRadius:"16px", position:"relative", overflow:"hidden", flexShrink:0 }}
+        style={{ width:"640px", height:"250px", background:"linear-gradient(to right, #c4b5fd, #67e8f9)", opacity:0.9, borderRadius:"16px", position:"relative", overflow:"hidden", flexShrink:0 }}
       >
         <div className="mp-glass">
           <div className="mp-cover">
