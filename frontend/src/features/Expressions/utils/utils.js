@@ -1,67 +1,59 @@
-import {
-    FaceLandmarker,
-    FilesetResolver
-} from "@mediapipe/tasks-vision";
-
+import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 
 export const init = async ({ landmarkerRef, videoRef, streamRef }) => {
-    const vision = await FilesetResolver.forVisionTasks(
-        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
-    );
+  const vision = await FilesetResolver.forVisionTasks(
+    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+  );
 
-    landmarkerRef.current = await FaceLandmarker.createFromOptions(
-        vision,
-        {
-            baseOptions: {
-                modelAssetPath:
-                    "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task"
-            },
-            outputFaceBlendshapes: true,
-            runningMode: "VIDEO",
-            numFaces: 1
-        }
-    );
+  landmarkerRef.current = await FaceLandmarker.createFromOptions(vision, {
+    baseOptions: {
+      modelAssetPath:
+        "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task",
+    },
+    outputFaceBlendshapes: true,
+    runningMode: "VIDEO",
+    numFaces: 1,
+  });
 
-    streamRef.current = await navigator.mediaDevices.getUserMedia({ video: true });
-    videoRef.current.srcObject = streamRef.current;
-    await videoRef.current.play();
+  streamRef.current = await navigator.mediaDevices.getUserMedia({ video: true });
+  videoRef.current.srcObject = streamRef.current;
+  await videoRef.current.play();
+
+  await new Promise((resolve) => {
+    if (videoRef.current.readyState >= 2) return resolve();
+    videoRef.current.onloadeddata = resolve;
+  });
 };
 
-export const detect = ({ landmarkerRef, videoRef, setExpression }) => {
-    if (!landmarkerRef.current || !videoRef.current) return;
+export const detect = ({ landmarkerRef, videoRef }) => {
+  if (!landmarkerRef.current || !videoRef.current) return "nutural";
 
-    const results = landmarkerRef.current.detectForVideo(
-        videoRef.current,
-        performance.now()
-    );
+  const results = landmarkerRef.current.detectForVideo(
+    videoRef.current,
+    performance.now()
+  );
 
-    if (results.faceBlendshapes?.length > 0) {
-        const blendshapes = results.faceBlendshapes[ 0 ].categories;
+  if (!results.faceBlendshapes?.length) return "nutural";
 
-        const getScore = (name) =>
-            blendshapes.find((b) => b.categoryName === name)?.score || 0;
+  const bs  = results.faceBlendshapes[0].categories;
+  const get = (name) => bs.find((b) => b.categoryName === name)?.score ?? 0;
 
-        const smileLeft = getScore("mouthSmileLeft");
-        const smileRight = getScore("mouthSmileRight");
-        const jawOpen = getScore("jawOpen");
-        const browUp = getScore("browInnerUp");
-        const frownLeft = getScore("mouthFrownLeft");
-        const frownRight = getScore("mouthFrownRight");
+  const smileL    = get("mouthSmileLeft");
+  const smileR    = get("mouthSmileRight");
+  const jawOpen   = get("jawOpen");
+  const browUp    = get("browInnerUp");   // raises for BOTH sad and surprise
+  const frownL    = get("mouthFrownLeft");
+  const frownR    = get("mouthFrownRight");
 
-        console.log(getScore("mouthFrownLeft"))
+  // Happy — both mouth corners up
+  if (smileL > 0.5 && smileR > 0.5) return "happy";
 
-        let currentExpression = "Neutral";
+  // Surprise — jaw drops AND brows up together
+  if (jawOpen > 0.25 && browUp > 0.25) return "surprise";
 
-        if (smileLeft > 0.5 && smileRight > 0.5) {
-            currentExpression = "happy";
-        } else if (jawOpen > 0.2 && browUp > 0.2) {
-            currentExpression = "surprised";
-        } else if (frownLeft > 0.0001 && frownRight > 0.0001) {
-            currentExpression = "sad";
-        }
+  // Sad — browInnerUp alone (puppy dog eyes) is the strongest mediapipe sad signal
+  // OR mouth corners pulling down even slightly
+  if (browUp > 0.2 || frownL > 0.05 || frownR > 0.05) return "sad";
 
-        setExpression(currentExpression);
-
-        return currentExpression
-    }
+  return "nutural";
 };

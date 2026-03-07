@@ -65,7 +65,7 @@ export default function MusicPlayer({ songs, moodColors, idx, setIdx, playing, s
   const volRef   = useRef(null);
 
   const song   = songs[idx];
-  const colors = moodColors[song.mood] || moodColors.chill;
+const colors = moodColors[song.mood] || moodColors.nutural;
 
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = muted ? 0 : volume;
