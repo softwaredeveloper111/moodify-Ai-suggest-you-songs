@@ -15,7 +15,7 @@ const app = express();
 app.use(express.static('./public'))
 app.use(express.json());
 app.use(cors({
-  origin:"http://localhost:5173",
+  origin:"https://moodify-ai-suggest-you-songs.onrender.com",
   credentials:true,
 }))
 app.use(cookieParser())
