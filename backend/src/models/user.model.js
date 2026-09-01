@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar:{
     type:String,
-    default:'https://ik.imagekit.io/a490stdk4/stylish-spectacles-guy-3d-avatar-character-illustrations-png.webp?updatedAt=1770782847473'
+    default:'https://ik.imagekit.io/a490stdk4/avatar.webp?updatedAt=1786158080891'
   }
 })
 

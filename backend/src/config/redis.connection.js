@@ -10,7 +10,7 @@ const redis = new Redis({
 
 
 redis.on("connect",()=>{
-  console.log(`connected to redis`);
+  console.log(`connected to redis✅`);
   
 })
 

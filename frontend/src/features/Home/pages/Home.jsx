@@ -13,15 +13,15 @@ import useAuth from "../../auth/hooks/useAuth";
 const Home = () => {
   const {handlerGetMe,user} = useAuth();
   const { loading, songs, HandlerGetSong } = useSong();
-  const [mood, setMood]     = useState("nutural");
+  const [mood, setMood]     = useState("neutral");
   const [idx, setIdx]       = useState(0);
   const [playing, setPlaying] = useState(false);
   const [imgErr, setImgErr] = useState({});
 
   const moodColors = {
     happy:    { from: "#f59e0b", to: "#ef4444" },
-    nutural:  { from: "#6366f1", to: "#06b6d4" },
-    surprise: { from: "#ec4899", to: "#8b5cf6" },
+    neutral:  { from: "#6366f1", to: "#06b6d4" },
+    surprised: { from: "#ec4899", to: "#8b5cf6" },
     sad:      { from: "#3b82f6", to: "#1e3a5f" },
   };
 

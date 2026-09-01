@@ -7,8 +7,8 @@ import { detect, init } from "../utils/utils";
 const MOOD_META = {
   happy:     { emoji: "😄", label: "happy",     color: "#facc15", glow: "rgba(250,204,21,0.35)"  },
   sad:       { emoji: "😢", label: "sad",       color: "#60a5fa", glow: "rgba(96,165,250,0.35)"  },
-  surprise: { emoji: "😲", label: "surprise", color: "#a78bfa", glow: "rgba(167,139,250,0.35)" },
-  nutural:   { emoji: "😐", label: "nutural",   color: "#34d399", glow: "rgba(52,211,153,0.35)"  },
+  surprised: { emoji: "😲", label: "surprised", color: "#a78bfa", glow: "rgba(167,139,250,0.35)" },
+  neutral:   { emoji: "😐", label: "neutral",   color: "#34d399", glow: "rgba(52,211,153,0.35)"  },
 };
 
 const injectKeyframes = () => {
@@ -210,9 +210,9 @@ export default function ExpressionCapture({ onMoodDetected }) {
     } catch (err) {
       console.error("Detection failed:", err);
       stopCamera();
-      // Even on total failure — fire callback with nutural
-      setMood("nutural");
-      onMoodDetected?.("nutural");
+      // Even on total failure — fire callback with neutral
+      setMood("neutral");
+      onMoodDetected?.("neutral");
     } finally {
       setPhase("result");
     }

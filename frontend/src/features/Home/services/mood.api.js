@@ -4,11 +4,11 @@ import axios from "axios";
 
 
 const instance = axios.create({
-  baseURL: 'https://moodify-ai-suggest-you-songs.onrender.com',
+  baseURL: 'http://localhost:3000',
   withCredentials:true
 });
 
-
+// https://moodify-ai-suggest-you-songs.onrender.com
 
 export async function moodGetSongAPI(mood){
    try {

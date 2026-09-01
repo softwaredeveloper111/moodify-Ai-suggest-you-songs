@@ -1,15 +1,31 @@
 import React, { useState } from "react";
 
-const PlayListItem = ({ songs, moodColors, idx, setIdx, playing, setPlaying, imgErr, setImgErr }) => {
-
+const PlayListItem = ({
+  songs,
+  moodColors,
+  idx,
+  setIdx,
+  playing,
+  setPlaying,
+  imgErr,
+  setImgErr,
+}) => {
   const [query, setQuery] = useState("");
 
-  const filtered = query.trim() === ""
-    ? songs
-    : songs.filter((s) =>
-        s.title.toLowerCase().includes(query.toLowerCase()) ||
-        s.artist.toLowerCase().includes(query.toLowerCase())
-      );
+  const getArtistName = (artist) => {
+    if (typeof artist !== "string") return "Unknown Artist";
+    return artist.split(",")[0].trim() || "Unknown Artist";
+  };
+
+  const filtered =
+    query.trim() === ""
+      ? songs
+      : songs.filter((s) => {
+          const title = (s.title || "").toLowerCase();
+          const artist = (getArtistName(s.artist) || "").toLowerCase();
+          const term = query.toLowerCase();
+          return title.includes(term) || artist.includes(term);
+        });
 
   return (
     <>
@@ -39,7 +55,16 @@ const PlayListItem = ({ songs, moodColors, idx, setIdx, playing, setPlaying, img
 
       <div
         className="playlist pl"
-        style={{ maxWidth:"490px",width:"100%" ,height:"86vh", background:"#e4e4e7", borderRadius:"10px", padding:"16px 28px", overflowY:"auto", scrollbarWidth:"thin" }}
+        style={{
+          maxWidth: "490px",
+          width: "100%",
+          height: "86vh",
+          background: "#e4e4e7",
+          borderRadius: "10px",
+          padding: "16px 28px",
+          overflowY: "auto",
+          scrollbarWidth: "thin",
+        }}
       >
         <div className="pl-header">
           <span className="pl-spark">✦</span>
@@ -62,29 +87,38 @@ const PlayListItem = ({ songs, moodColors, idx, setIdx, playing, setPlaying, img
           <div
             key={s._id}
             className={`pl-item${songs.indexOf(s) === idx ? " act" : ""}`}
-            onClick={() => { setIdx(songs.indexOf(s)); setPlaying(true); }}
+            onClick={() => {
+              setIdx(songs.indexOf(s));
+              setPlaying(true);
+            }}
           >
             <span className="pl-num">{i + 1}</span>
 
-            {!imgErr[s._id] ? (
+            {!imgErr[s._id] && s.posterUrl ? (
               <img
                 src={s.posterUrl}
                 className="pl-thumb"
-                alt={s.title}
-                onError={() => setImgErr(p => ({ ...p, [s._id]: true }))}
+                alt={s.title || "Song poster"}
+                onError={() => setImgErr((p) => ({ ...p, [s._id]: true }))}
               />
             ) : (
               <div
                 className="pl-thumb"
-                style={{ background: `linear-gradient(135deg,${moodColors[s.mood]?.from || "#999"},${moodColors[s.mood]?.to || "#555"})`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:13 }}
+                style={{
+                  background: `linear-gradient(135deg,${moodColors[s.mood]?.from || "#999"},${moodColors[s.mood]?.to || "#555"})`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 13,
+                }}
               >
                 🎵
               </div>
             )}
 
             <div className="pl-info">
-              <div className="pl-name">{s.title}</div>
-              <div className="pl-artist">{s.artist.split(",")[0]}</div>
+              <div className="pl-name">{s.title || "Untitled Song"}</div>
+              <div className="pl-artist">{getArtistName(s.artist)}</div>
             </div>
 
             {songs.indexOf(s) === idx && playing && (
